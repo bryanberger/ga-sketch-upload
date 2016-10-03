@@ -1,0 +1,130 @@
+<html>
+<head>
+  <title>Product TV Dashboard</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet">
+  <style media="screen">
+    * { margin: 0; padding: 0; outline: none; border: none; box-sizing: border-box; }
+    html, body { width: 100%; }
+    html {  overflow-y: scroll; }
+    body { padding: 32px; font-family: 'Open Sans', sans-serif; }
+    body, #grid { background: #eee; }
+
+    .gutter-sizer { width: 1.5%; }
+    .grid-sizer, .grid-item { width: 18.8%; }
+    .grid-item-large { width:37.6%; }
+
+    .grid-item {
+      float: left;
+      display: block;
+    }
+
+    .grid-item-img {
+      display: block;
+      max-width: 100%;
+      width: 100%;
+      border-radius: 2px;
+    }
+
+    .grid-item-meta {
+      font-size: 12px;
+      font-weight: 600;
+      padding-top: 10px;
+      list-style: none;
+      color: #666;
+    }
+
+    .grid-item-meta span {
+      font-weight: 300;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="grid">
+    <div class="grid-sizer"></div>
+    <div class="gutter-sizer"></div>
+  </div>
+
+  <!-- JS -->
+  <script type="text/javascript" src="//code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+  <script type="text/javascript" src="//unpkg.com/packery@2.1/dist/packery.pkgd.min.js"></script>
+  <script type="text/javascript" src="//npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      window.$grid = $('#grid').packery({
+        itemSelector: '.grid-item',
+        gutter: '.gutter-sizer',
+        percentPosition: true
+      });
+
+      $grid.imagesLoaded().progress(function() {
+        $grid.packery();
+      });
+    });
+  </script>
+  <script type="text/javascript">
+    var ids_cache = [];
+    const socket = new WebSocket('ws://localhost:3000/');
+
+    socket.onopen = function (event) {
+      socket.send('Hello server!');
+    };
+
+    socket.onmessage = function (event) {
+      var items = JSON.parse(event.data);
+      var ids_to_add = [];
+      var ids_to_remove = [];
+
+      var ids = items.map(function(item) {
+        return item.id;
+      })
+
+      if(ids_cache.length === 0) {
+        ids_to_add = ids;
+      } else {
+        ids_to_remove = ids_cache.filter(function(item) {
+          return ids.indexOf(item) === -1;
+        });
+
+        ids_to_add = ids.filter(function(item) {
+          return ids_cache.indexOf(item) === -1;
+        });
+      }
+
+      // cache ids
+      ids_cache = ids;
+
+      // ids to remove
+      if(ids_to_remove.length > 0) {
+        $.each(ids_to_remove, function(index, id) {
+          var $elem = $('#grid').find('[data-id="'+id+'"]');
+
+          $grid.packery('remove', $elem)
+            .packery('shiftLayout');
+        });
+      }
+
+      // ids to add
+      if(ids_to_add.length > 0) {
+        items.map(function(item) {
+          if(ids_to_add.indexOf(item.id) > -1) {
+            var $item = $('<div class="grid-item" data-id="' + item.id + '"><img class="grid-item-img" src="' + item.url +
+            '" alt="" /><ul class="grid-item-meta"><li>' + item.user +
+            ', <span>' + item.artboard + '</span></li></ul></div>');
+
+            $grid.packery()
+              .prepend($item)
+              .packery('prepended', $item)
+              .packery();
+          }
+        });
+      }
+
+      // just in case, relayout after image loads
+      $grid.imagesLoaded().progress(function() {
+        $grid.packery();
+      });
+    };
+  </script>
+</body>
+</html>
