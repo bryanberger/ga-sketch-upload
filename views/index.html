@@ -68,6 +68,7 @@
 
     socket.onopen = function (event) {
       socket.send('Hello server!');
+      startPing();
     };
 
     socket.onmessage = function (event) {
@@ -125,6 +126,15 @@
         $grid.packery();
       });
     };
+
+    function startPing() {
+      if(!socket) return;
+
+      // ping websocket server every 30s to keep connection alive
+      setInterval(function() {
+        socket.send(JSON.stringify(new Date()));
+      }, 30000);
+    }
   </script>
 </body>
 </html>
