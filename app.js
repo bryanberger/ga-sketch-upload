@@ -43,7 +43,7 @@ function *text(next) {
 };
 
 function *index() {
-  this.body = yield render('index', { items: items });
+  this.body = yield render('index', { items: items, port: process.env.PORT || 3000 });
 };
 
 function *webhooks_validate() {
