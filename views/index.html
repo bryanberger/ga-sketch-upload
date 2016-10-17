@@ -65,7 +65,7 @@
   </script>
   <script type="text/javascript">
     var ids_cache = [];
-    const socket = new WebSocket('ws://localhost:5000');
+    const socket = new WebSocket('wss://ga-product-dashboard-tv.herokuapp.com');
 
     socket.onopen = function (event) {
       socket.send('Hello server!');
