@@ -17,7 +17,6 @@ const koa = require('koa'),
   path = require('path');
 
 const extensions = ['.png', '.jpg', '.jpeg', '.gif']
-const child = cprocess.fork('./lib/worker');
 const app = websockify(koa());
 app.use(logger());
 app.use(route.post('/webhooks', text));
@@ -27,11 +26,6 @@ app.use(route.post('/webhooks', webhooks_post));
 app.use(route.post('/upload', upload));
 
 var items = [];
-
-child.on('message', function(items) {
-  items = items;
-  app.ws.broadcast(JSON.stringify(items));
-});
 
 function *text(next) {
   this.text = yield getRawBody(this.req, {
@@ -61,7 +55,7 @@ function *webhooks_post(next) {
   this.status = 200;
 
   // child execute the update
-  child.send({msg: 'update_items'});
+  createWorker({msg: 'update_items'});
 };
 
 function *upload(next) {
@@ -96,7 +90,7 @@ function *upload(next) {
   }
 
   // child execute the upload
-  child.send({msg: 'upload', path: filePath, filename: parts.field.filename, user: parts.field.user});
+  createWorker({msg: 'upload', path: filePath, filename: parts.field.filename, user: parts.field.user});
 
   // return JSON back to sketchplugin
   this.body = JSON.stringify({status: 'success'});
@@ -112,10 +106,20 @@ function uid() {
   return Math.random().toString(36).slice(2);
 };
 
+function createWorker(msg) {
+  var child = cprocess.fork('./lib/worker');
+  child.on('message', function(items) {
+    items = items;
+    app.ws.broadcast(JSON.stringify(items));
+    child.kill();
+  });
+  child.send(msg);
+}
+
 app.ws.use(route.get('/', function* (next) {
   if(items.length === 0) {
     // get intial items for first user
-    child.send({msg: 'update_items'});
+    createWorker({msg: 'update_items'});
   } else {
     // send cached ones
     this.websocket.send(items);
