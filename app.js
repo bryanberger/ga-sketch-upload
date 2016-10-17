@@ -16,6 +16,7 @@ const koa = require('koa'),
   cp = require('fs-cp'),
   path = require('path');
 
+const extensions = ['.png', '.jpg', '.jpeg', '.gif']
 const child = cprocess.fork('./lib/worker');
 const app = websockify(koa());
 app.use(logger());
@@ -69,7 +70,7 @@ function *upload(next) {
   var parts = parse(this, {
     autoFields: true,
     checkFile: function(fieldname, file, filename) {
-      if (path.extname(filename) !== '.png') {
+      if (extensions.indexOf(path.extname(filename)) === -1) {
         var err = new Error('invalid image');
         err.status = 400;
         return err;
