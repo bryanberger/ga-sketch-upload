@@ -108,11 +108,18 @@ function uid() {
 
 function createWorker(msg) {
   var child = cprocess.fork('./lib/worker');
+  
   child.on('message', function(items) {
+    if(items === 'error') {
+      child.kill();
+      return;
+    }
+
     items = items;
     app.ws.broadcast(JSON.stringify(items));
     child.kill();
   });
+
   child.send(msg);
 }
 
