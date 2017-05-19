@@ -24,6 +24,7 @@ app.use(route.get('/', index));
 app.use(route.get('/webhooks', webhooks_validate));
 app.use(route.post('/webhooks', webhooks_post));
 app.use(route.post('/upload', upload));
+app.use(route.post('/remove', remove));
 
 var items = [];
 
@@ -56,6 +57,35 @@ function *webhooks_post(next) {
 
   // child execute the update
   createWorker({msg: 'update_items'});
+};
+
+function *remove(next) {
+
+  console.log(this.request.query);
+  //
+  // var parts = parse(this, {
+  //   autoFields: true,
+  //   checkFile: function(path) {
+  //     if (extensions.indexOf(path.extname(path)) === -1) {
+  //       var err = new Error('invalid path');
+  //       err.status = 400;
+  //       return err;
+  //     }
+  //   },
+  //   checkField: function(name, value) {
+  //     if (name === 'id' && value !== process.env.SKETCH_TOKEN) {
+  //       var err = new Error('invalid token');
+  //       err.status = 400;
+  //       return err;
+  //     }
+  //   }
+  // });
+
+  // child execute the upload
+  //createWorker({msg: 'delete', filepath: part.path});
+
+  // return JSON back to sketchplugin
+  this.body = JSON.stringify({status: 'success'});
 };
 
 function *upload(next) {
@@ -108,9 +138,9 @@ function uid() {
 
 function createWorker(msg) {
   var child = cprocess.fork('./lib/worker');
-  
+
   child.on('message', function(items) {
-    if(items === 'error') {
+    if(items === 'error' || items === null) {
       child.kill();
       return;
     }
