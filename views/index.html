@@ -165,7 +165,7 @@
     init();
 
     function startPing() {
-      if(!socket || socket.readyState === socket.CLOSING || socket.readyState === socket.CLOSED) return;
+      if(!socket || (socket.readyState === socket.CLOSING || socket.readyState === socket.CLOSED || socket.readyState !== socket.CONNECTING) ) return;
 
       // ping websocket server every 25s to keep connection alive
       setInterval(function() {
