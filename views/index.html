@@ -165,11 +165,13 @@
     init();
 
     function startPing() {
-      if(!socket || (socket.readyState === socket.CLOSING || socket.readyState === socket.CLOSED || socket.readyState === socket.CONNECTING) ) return;
+      if(!socket) return;
 
       // ping websocket server every 25s to keep connection alive
       setInterval(function() {
-        socket.send(JSON.stringify(new Date()));
+        if(socket && socket.readyState !== socket.CLOSING || socket.readyState !== socket.CLOSED || socket.readyState !== socket.CONNECTING) {
+          socket.send(JSON.stringify(new Date()));
+        }
       }, 25000);
     }
   </script>
