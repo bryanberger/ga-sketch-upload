@@ -21,7 +21,7 @@
     <div class="sk-cube sk-cube9"></div>
   </div>
 
-  <div id="grid" data-featherlight-gallery data-featherlight-filter=".grid-item-link">
+  <div id="grid">
     <div class="grid-sizer"></div>
     <div class="gutter-sizer"></div>
   </div>
@@ -47,15 +47,14 @@
         $grid.packery();
       });
 
-      $('.grid-item-link').featherlightGallery({
-        previousIcon: '«',
-        nextIcon: '»',
+      $('#grid').featherlightGallery({
+        filter: '.grid-item-link',
         gallery: {
-          fadeIn: 300,
-          fadeOut: 300
+          fadeIn: 500,
+          fadeOut: 500
         },
-        openSpeed: 300,
-        closeSpeed: 300
+        openSpeed: 500,
+        closeSpeed: 500
       });
     });
   </script>
