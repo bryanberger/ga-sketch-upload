@@ -131,7 +131,7 @@ $(function() {
         var $elem = $(elem);
         var $found = $elem.find(`[data-filename='${hash}']`);
         if($found) {
-          $.featherlight($elem.find('.grid-item-link'));
+          return $.featherlight($elem.find('.grid-item-link'));
         }
       });
     }
