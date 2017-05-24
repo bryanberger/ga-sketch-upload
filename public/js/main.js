@@ -86,11 +86,16 @@ $(function() {
 
       // ids to add
       if(ids_to_add.length > 0) {
+        var i = 0;
+        var items_len = items.length;
         items.map(function(item) {
           if(ids_to_add.indexOf(item.id) > -1) {
+            console.log(item);
             var $item = $(
             '<div class="grid-item" data-id="' + item.id + '">' +
-            '<a class="grid-item-link" href="' + item.url + '" data-featherlight="image"><img class="grid-item-img" src="' + item.url + '"/></a>' +
+            '<a class="grid-item-link" href="' + item.url + '" data-featherlight="image">' +
+            '<img class="grid-item-img" src="' + item.url + '" data-filename="' + item.filename + '"/>' +
+            '</a>' +
             '<ul class="grid-item-meta"><li>' + item.user +
             ', <span>' + item.artboard + '</span></li></ul></div>');
 
@@ -105,10 +110,33 @@ $(function() {
       // just in case, relayout after image loads
       $grid.imagesLoaded().progress(function() {
         $grid.packery();
+        i++;
+
+        // end of array
+        if(i === items_len) {
+          allImagesLoaded();
+        }
       });
+
     };
   }
   init();
+
+  function allImagesLoaded() {
+    // check hashes
+    if(window.location.hash) {
+      var hash = window.location.hash.substring(1);
+      var $items = $('.grid-item');
+
+      $.each($items, function(index, elem) {
+        var $elem = $(elem);
+        var $found = $elem.find(`[data-filename='${hash}']`);
+        if($found) {
+          $.featherlight($elem.find('.grid-item-link'));
+        }
+      });
+    }
+  }
 
   function startPing() {
     if(!socket) return;
