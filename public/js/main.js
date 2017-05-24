@@ -26,15 +26,16 @@ $(function() {
   });
 
   init = function() {
+    if (typeof socket !== 'undefined') { socket.close(); }
     socket = null;
     socket = new WebSocket(wss_url);
+
     socket.onopen = function (event) {
       if(timer_id) { /* a setInterval has been fired */
         clearInterval(timer_id);
         timer_id = 0;
       }
 
-      socket.send('Hello server!');
       startPing();
     };
 
