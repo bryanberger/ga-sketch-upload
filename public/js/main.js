@@ -90,7 +90,6 @@ $(function() {
         var items_len = items.length;
         items.map(function(item) {
           if(ids_to_add.indexOf(item.id) > -1) {
-            console.log(item);
             var $item = $(
             '<div class="grid-item" data-id="' + item.id + '">' +
             '<a class="grid-item-link" href="' + item.url + '" data-featherlight="image">' +
