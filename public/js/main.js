@@ -115,7 +115,7 @@ $(function() {
 
     // ping websocket server every 25s to keep connection alive
     setInterval(function() {
-      if(socket && socket.readyState !== socket.CLOSING || socket.readyState !== socket.CLOSED || socket.readyState !== socket.CONNECTING) {
+      if(socket && (socket.readyState !== socket.CLOSING || socket.readyState !== socket.CLOSED || socket.readyState !== socket.CONNECTING)) {
         socket.send(JSON.stringify(new Date()));
       }
     }, 25000);
