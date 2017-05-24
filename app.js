@@ -8,6 +8,7 @@ const koa = require('koa'),
   serve = require('koa-static'),
   contentType = require('content-type'),
   render = require('./lib/render'),
+  slack = require('./lib/slack'),
   parse = require('co-busboy'),
   getRawBody = require('raw-body'),
   crypto = require('crypto'),
@@ -17,6 +18,7 @@ const koa = require('koa'),
   cp = require('fs-cp'),
   path = require('path');
 
+const uri = 'https://ga-product-dashboard-tv.herokuapp.com/#'
 const extensions = ['.png', '.jpg', '.jpeg', '.gif']
 const app = websockify(koa());
 app.use(logger());
@@ -148,7 +150,13 @@ function createWorker(msg) {
     }
 
     items = items;
+    let last_item = items[items.length];
     app.ws.broadcast(JSON.stringify(items));
+
+    // slack broadcast
+    slack.notify('A new <' + uri + last_item.filename + '|work-in-progress> has been uploaded to the Design TV by ' + last_item.user)
+
+    // kill worker
     child.kill();
   });
 
