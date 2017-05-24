@@ -4,51 +4,24 @@
   <title>Product TV Dashboard</title>
   <meta charset="utf-8">
   <link href="//cdn.rawgit.com/noelboss/featherlight/1.7.5/release/featherlight.min.css" type="text/css" rel="stylesheet" />
+  <link href="//cdn.rawgit.com/noelboss/featherlight/1.7.5/release/featherlight.gallery.min.css" type="text/css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet">
-  <style media="screen">
-    * { margin: 0; padding: 0; outline: none; border: none; box-sizing: border-box; }
-    html, body { width: 100%; }
-    html {  overflow-y: scroll; }
-    body { padding: 32px; font-family: 'Open Sans', sans-serif; }
-    body, #grid { background: #eee; }
-
-    .gutter-sizer { width: 1.5%; }
-    .grid-sizer, .grid-item { width: 18.8%; }
-    .grid-item-large { width:37.6%; }
-
-    .grid-item {
-      float: left;
-      display: block;
-    }
-
-    .grid-item-link {
-      display: block;
-    }
-
-    .grid-item-img {
-      display: block;
-      max-width: 100%;
-      width: 100%;
-      border-radius: 2px;
-      background: #fff;
-    }
-
-    .grid-item-meta {
-      font-size: 12px;
-      font-weight: 600;
-      padding-top: 10px;
-      list-style: none;
-      color: #666;
-    }
-
-    .grid-item-meta span {
-      font-weight: 300;
-    }
-
-  </style>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-  <div id="grid">
+  <div class="sk-cube-grid preloader">
+    <div class="sk-cube sk-cube1"></div>
+    <div class="sk-cube sk-cube2"></div>
+    <div class="sk-cube sk-cube3"></div>
+    <div class="sk-cube sk-cube4"></div>
+    <div class="sk-cube sk-cube5"></div>
+    <div class="sk-cube sk-cube6"></div>
+    <div class="sk-cube sk-cube7"></div>
+    <div class="sk-cube sk-cube8"></div>
+    <div class="sk-cube sk-cube9"></div>
+  </div>
+
+  <div id="grid" data-featherlight-gallery data-featherlight-filter=".grid-item-link">
     <div class="grid-sizer"></div>
     <div class="gutter-sizer"></div>
   </div>
@@ -57,9 +30,11 @@
   <script type="text/javascript" src="//code.jquery.com/jquery-latest.js"></script>
   <script type="text/javascript" src="//unpkg.com/packery@2.1/dist/packery.pkgd.min.js"></script>
   <script type="text/javascript" src="//npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/detect_swipe/2.1.1/jquery.detect_swipe.min.js"></script>
   <script type="text/javascript" src="//cdn.rawgit.com/noelboss/featherlight/1.7.5/release/featherlight.min.js"></script>
+  <script type="text/javascript" src="//cdn.rawgit.com/noelboss/featherlight/1.7.5/release/featherlight.gallery.min.js"></script>
   <script type="text/javascript">
-    $.featherlight.autoBind = false;
+    // $.featherlight.autoBind = false;
 
     $(function() {
       window.$grid = $('#grid').packery({
@@ -70,6 +45,17 @@
 
       $grid.imagesLoaded().progress(function() {
         $grid.packery();
+      });
+
+      $('.grid-item-link').featherlightGallery({
+        previousIcon: '«',
+        nextIcon: '»',
+        gallery: {
+          fadeIn: 300,
+          fadeOut: 300
+        },
+        openSpeed: 300,
+        closeSpeed: 300
       });
     });
   </script>
@@ -105,6 +91,9 @@
         var items = JSON.parse(event.data);
         var ids_to_add = [];
         var ids_to_remove = [];
+
+        // remove preloader on first message
+        $('.preloader').remove();
 
         var ids = items.map(function(item) {
           return item.id;
@@ -149,9 +138,6 @@
                 .prepend($item)
                 .packery('prepended', $item)
                 .packery();
-
-              // $item.featherlight({type: {image: true}});
-              $item.featherlight(item.url);
             }
           });
         }

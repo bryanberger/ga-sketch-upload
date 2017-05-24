@@ -5,6 +5,7 @@ const koa = require('koa'),
   route = require('koa-route'),
   body = require('koa-body'),
   websockify = require('koa-websocket'),
+  serve = require('koa-static'),
   contentType = require('content-type'),
   render = require('./lib/render'),
   parse = require('co-busboy'),
@@ -19,6 +20,7 @@ const koa = require('koa'),
 const extensions = ['.png', '.jpg', '.jpeg', '.gif']
 const app = websockify(koa());
 app.use(logger());
+app.use(serve(__dirname + '/public'));
 app.use(route.post('/webhooks', text));
 app.use(route.get('/', index));
 app.use(route.get('/webhooks', webhooks_validate));
