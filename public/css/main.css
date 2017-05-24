@@ -82,8 +82,8 @@ body, #grid { background: #eee; }
 }
 
 .sk-cube-grid {
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
   position: absolute;
   margin: auto;
   top: 0;
