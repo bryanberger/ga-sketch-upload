@@ -150,7 +150,7 @@ function createWorker(msg) {
     }
 
     items = items;
-    let last_item = items[items.length];
+    let last_item = items[items.length - 1];
     app.ws.broadcast(JSON.stringify(items));
 
     // slack broadcast
