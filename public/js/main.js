@@ -129,9 +129,12 @@ $(function() {
 
       $.each($items, function(index, elem) {
         var $elem = $(elem);
-        var $found = $elem.find(`[data-filename='${hash}']`);
-        if($found) {
-          return $.featherlight($elem.find('.grid-item-link'));
+        var $found = $elem.find('[data-filename="' + hash + '"]')
+
+        if($found.length === 1) {
+          // open it (FIX: this opens the item outside of the Gallery context)
+          $.featherlight($elem.find('.grid-item-link'));
+          return false
         }
       });
     }
@@ -142,7 +145,7 @@ $(function() {
 
     // ping websocket server every 25s to keep connection alive
     setInterval(function() {
-      if(socket && (socket.readyState !== socket.CLOSING || socket.readyState !== socket.CLOSED || socket.readyState !== socket.CONNECTING)) {
+      if(socket && (socket.readyState !== socket.CLOSING && socket.readyState !== socket.CLOSED && socket.readyState !== socket.CONNECTING)) {
         socket.send(JSON.stringify(new Date()));
       }
     }, 25000);
