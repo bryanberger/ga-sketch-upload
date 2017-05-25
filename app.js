@@ -1,3 +1,4 @@
+process.env.NODE_PATH = __dirname + '/lib/'; // KLUDGE: had todo this for the worker.js
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 const koa = require('koa'),
@@ -139,7 +140,7 @@ function uid() {
 };
 
 function createWorker(msg) {
-  var child = cprocess.fork('./lib/worker');
+  var child = cprocess.fork(path.join(__dirname + '/lib/worker'));
 
   child.on('message', function(items) {
     if(items === 'error' || items === null) {

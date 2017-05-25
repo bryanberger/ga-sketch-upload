@@ -57,6 +57,7 @@ $(function() {
       $('.preloader').remove();
 
       var ids = items.map(function(item) {
+        // item.filename = encodeURIComponent(item.filename); // encode
         return item.id;
       })
 
@@ -89,6 +90,7 @@ $(function() {
       if(ids_to_add.length > 0) {
         var i = 0;
         var items_len = items.length;
+
         items.map(function(item) {
           if(ids_to_add.indexOf(item.id) > -1) {
             var $item = $(
@@ -98,6 +100,8 @@ $(function() {
             '</a>' +
             '<ul class="grid-item-meta"><li>' + item.user +
             ', <span>' + item.artboard + '</span></li></ul></div>');
+
+            // checkWindowHash($item, item.filename);
 
             $grid.packery()
               .prepend($item)
@@ -123,10 +127,19 @@ $(function() {
   init();
 
   function allImagesLoaded() {
+    checkWindowHash();
+  }
+
+  // function checkWindowHash($item, filename) {
+  function checkWindowHash($item, filename) {
     // check hashes
     if(window.location.hash) {
       var hash = window.location.hash.substring(1);
       var $items = $('.grid-item');
+
+      // if(filename === hash) {
+      //   $.featherlight($item.find('.grid-item-link'));
+      // }
 
       $.each($items, function(index, elem) {
         var $elem = $(elem);
