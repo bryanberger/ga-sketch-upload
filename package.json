@@ -4,7 +4,7 @@
   "description": "Product Design TV Dashboard UI (Sketch Plugin, Dropbox Webhooks, Websockets)",
   "main": "app.js",
   "engines": {
-    "node": "8.1.4"
+    "node": "6.11.1"
   },
   "scripts": {
     "start": "node app.js",
