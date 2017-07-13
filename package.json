@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Product Design TV Dashboard UI (Sketch Plugin, Dropbox Webhooks, Websockets)",
   "main": "app.js",
+  "engines": {
+    "node": "8.1.4"
+  },
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
