@@ -11,10 +11,6 @@ $(function() {
     percentPosition: true
   });
 
-  $grid.imagesLoaded().progress(function() {
-    $grid.packery();
-  });
-
   $('#grid').featherlightGallery({
     filter: '.grid-item-link',
     gallery: {
@@ -93,15 +89,23 @@ $(function() {
 
         items.map(function(item) {
           if(ids_to_add.indexOf(item.id) > -1) {
-            var $item = $(
-            '<div class="grid-item" data-id="' + item.id + '">' +
-            '<a class="grid-item-link" href="' + item.url + '" data-featherlight="image">' +
-            '<img class="grid-item-img" src="' + item.url + '" data-filename="' + item.filename + '"/>' +
-            '</a>' +
-            '<ul class="grid-item-meta"><li>' + item.user +
-            ', <span>' + item.artboard + '</span></li></ul></div>');
+            var itemStr = '';
+
+            itemStr += '<div class="grid-item" data-id="' + item.id + '">';
+            if(item.extension === '.mp4' || item.extension === '.mov') {
+              items_len--; // KLUDGE remove videos from imagesLoaded check
+              itemStr +='<a class="grid-item-link" href="/video?url=' + encodeURIComponent(item.url) + '" data-featherlight="iframe">';
+              itemStr += '<video class="grid-item-img" autoplay loop"><source src="' + item.url + '" type="video/mp4" data-filename="' + item.filename + '"></video>';
+            } else {
+              itemStr +='<a class="grid-item-link" href="' + item.url + '" data-featherlight="image">';
+              itemStr +='<img class="grid-item-img" src="' + item.url + '" data-filename="' + item.filename + '"/>';
+            }
+            itemStr +='</a>';
+            itemStr +=  '<ul class="grid-item-meta"><li>' + item.user;
+            itemStr +=', <span>' + item.artboard + '</span></li></ul></div>';
 
             // checkWindowHash($item, item.filename);
+            var $item = $(itemStr);
 
             $grid.packery()
               .prepend($item)
@@ -121,12 +125,16 @@ $(function() {
           allImagesLoaded();
         }
       });
-
     };
   }
   init();
 
   function allImagesLoaded() {
+    // now load and pack all videos
+    $('video').on('loadeddata', function(e) {
+      $grid.packery();
+    });
+
     checkWindowHash();
   }
 
