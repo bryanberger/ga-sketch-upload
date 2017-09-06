@@ -131,8 +131,13 @@ $(function() {
 
   function allImagesLoaded() {
     // now load and pack all videos
-    $('video').on('loadeddata', function(e) {
+    $('video').on('loadeddata', function() {
       $grid.packery();
+    });
+
+    // loop workaround
+    $('video').on('ended', function () {
+      this.play();
     });
 
     checkWindowHash();
