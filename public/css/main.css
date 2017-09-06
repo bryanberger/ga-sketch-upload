@@ -81,6 +81,17 @@ body, #grid { background: #eee; }
   display: none;
 }
 
+.featherlight-iframe .featherlight-content {
+  width: 90%;
+  height: 100%;
+}
+
+.featherlight-iframe .featherlight-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .sk-cube-grid {
   width: 80px;
   height: 80px;

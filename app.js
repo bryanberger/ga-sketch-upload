@@ -18,12 +18,13 @@ const koa = require('koa'),
   cp = require('fs-cp'),
   path = require('path');
 
-const extensions = ['.png', '.jpg', '.jpeg', '.gif']
+const extensions = ['.png', '.jpg', '.jpeg', '.gif', '.mp4', '.mov']
 const app = websockify(koa());
 app.use(logger());
 app.use(serve(__dirname + '/public'));
 app.use(route.post('/webhooks', text));
 app.use(route.get('/', index));
+app.use(route.get('/video', video));
 app.use(route.get('/webhooks', webhooks_validate));
 app.use(route.post('/webhooks', webhooks_post));
 app.use(route.post('/upload', upload));
@@ -43,6 +44,10 @@ function *text(next) {
 
 function *index() {
   this.body = yield render('index', { items: items, port: process.env.PORT || 3000 });
+};
+
+function *video() {
+  this.body = yield render('video');
 };
 
 function *webhooks_validate() {
@@ -98,7 +103,7 @@ function *upload(next) {
     autoFields: true,
     checkFile: function(fieldname, file, filename) {
       if (extensions.indexOf(path.extname(filename)) === -1) {
-        var err = new Error('invalid image');
+        var err = new Error('invalid filetype');
         err.status = 400;
         return err;
       }
@@ -118,7 +123,7 @@ function *upload(next) {
 
   var part, filePath;
   while (part = yield parts) {
-    filePath = part.path = path.join(tmpdir, uid() + '.png');
+    filePath = part.path = path.join(tmpdir, uid());
     yield cp(part, part.path);
   }
 
