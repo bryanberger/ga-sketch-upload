@@ -27,6 +27,9 @@
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
       };
       $('body').append('<video autoplay loop"><source src="' + getUrlParameter('url') + '&raw=1' + '" type="video/mp4"></video>');
+      $('video').on('ended', function () {
+        this.play();
+      });
     </script>
   </body>
 </html>
