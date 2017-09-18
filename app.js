@@ -7,8 +7,8 @@ const koa = require('koa'),
   body = require('koa-body'),
   websockify = require('koa-websocket'),
   serve = require('koa-static'),
+  views = require('koa-views'),
   contentType = require('content-type'),
-  render = require('./lib/render'),
   parse = require('co-busboy'),
   getRawBody = require('raw-body'),
   crypto = require('crypto'),
@@ -19,13 +19,16 @@ const koa = require('koa'),
   path = require('path');
 
 const extensions = ['.png', '.jpg', '.jpeg', '.gif', '.mp4', '.mov']
-const app = websockify(koa());
+const app = websockify(new koa());
+
 app.use(logger());
+app.use(views(__dirname + '/views', {extension: 'pug'}))
 app.use(serve(__dirname + '/public'));
-app.use(route.post('/webhooks', text));
 app.use(route.get('/', index));
+app.use(route.get('/single', single));
 app.use(route.get('/video', video));
 app.use(route.get('/webhooks', webhooks_validate));
+app.use(route.post('/webhooks', text));
 app.use(route.post('/webhooks', webhooks_post));
 app.use(route.post('/upload', upload));
 app.use(route.post('/remove', remove));
@@ -42,17 +45,21 @@ function *text(next) {
   yield next;
 };
 
-function *index() {
-  this.body = yield render('index', { items: items, port: process.env.PORT || 3000 });
-};
+async function index(ctx) {
+  await ctx.render('index', { items: items, port: process.env.PORT || 3000 })
+}
 
-function *video() {
-  this.body = yield render('video');
-};
+async function single(ctx) {
+  await ctx.render('single');
+}
 
-function *webhooks_validate() {
-  this.body = this.request.query['challenge'];
-};
+async function video(ctx) {
+  await ctx.render('video');
+}
+
+async function webhooks_validate(ctx) {
+  ctx.body = ctx.request.query['challenge'];
+}
 
 function *webhooks_post(next) {
   if(!isValidRequest(this.request.headers, this.text)) {
