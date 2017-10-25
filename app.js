@@ -168,7 +168,7 @@ function createWorker(msg) {
   child.send(msg);
 }
 
-app.ws.use(route.get('/', function* (next) {
+app.ws.use(route.get('/', function (ctx) {
   if(items.length === 0) {
     // get intial items for first user
     createWorker({msg: 'update_items'});
@@ -183,7 +183,7 @@ app.ws.use(route.get('/', function* (next) {
   });
 
   // yielding `next` will pass the context (this) on to the next ws middleware
-  yield next;
+  return next(ctx);
 }));
 
 app.ws.broadcast = function broadcast(data) {
