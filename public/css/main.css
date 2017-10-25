@@ -158,3 +158,22 @@ body, #grid { background: #eee; }
             transform: scale3D(0, 0, 1);
   }
 }
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.btn-load-all {
+  display: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 1rem;
+  background: #ccc;
+  color: #666;
+  border-radius: 4px;
+}
+
+.btn-load-all:hover {
+  background: #a4a4a4;
+}
