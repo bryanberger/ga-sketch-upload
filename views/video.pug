@@ -1,35 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <style media="screen">
-      * { margin: 0; padding: 0; border: 0; outline: none; }
-      html, body {
-        width: 100%;
-        height: 100%;
-      }
-
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    </style>
-  </head>
-  <body>
-    <script type="text/javascript" src="//code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript">
-      function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        var results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-      };
-      $('body').append('<video autoplay loop"><source src="' + getUrlParameter('url') + '&raw=1' + '" type="video/mp4"></video>');
-      $('video').on('ended', function () {
-        this.play();
-      });
-    </script>
-  </body>
-</html>
+doctype html
+html(lang="en")
+  head
+    style
+      include /css/video.css
+  body
+    script(src='//code.jquery.com/jquery-latest.js')
+    script(src='/js/video.js')
