@@ -1,7 +1,6 @@
 // $.featherlight.autoBind = false;
 $(function() {
-  // const wss_url = 'wss://ga-product-dashboard-tv.herokuapp.com';
-  const wss_url = 'ws://localhost:3000';
+  const wss_url = 'wss://ga-product-dashboard-tv.herokuapp.com';
   var ids_cache = [];
   var timer_id = 0;
   var socket;
