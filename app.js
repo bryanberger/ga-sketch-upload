@@ -166,7 +166,6 @@ function createWorker(msg) {
       child.kill()
       return
     }
-    console.log(items)
 
     items = _items
     app.ws.broadcast(JSON.stringify(items))
