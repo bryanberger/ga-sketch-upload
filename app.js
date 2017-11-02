@@ -2,16 +2,12 @@ process.env.NODE_PATH = __dirname + '/lib/'; // KLUDGE: had todo this for the wo
 if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 
 const express     = require('express'),
-  uuid            = require('uuid/v1'),
   contentType     = require('content-type'),
-  bodyParser      = require('body-parser'),
-  busboy          = require('busboy'),
   getRawBody      = require('raw-body'),
   crypto          = require('crypto'),
   cprocess        = require('child_process'),
   os              = require('os'),
   fs              = require('fs'),
-  cp              = require('fs-cp'),
   path            = require('path'),
   multer          = require('multer'),
   app             = express(),
@@ -60,10 +56,6 @@ app.post('/webhooks', webhooks_post)
 
 // Dropbox Item objects
 let items = []
-
-// Parser
-
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // Routes
 
