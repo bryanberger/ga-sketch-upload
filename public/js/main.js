@@ -104,7 +104,7 @@ $(function() {
 
     // ids to add
     if(ids_to_add.length > 0) {
-      var i = 0;
+      var i = 0; var z = 0;
       var items_len = items.length;
 
       // items.map(function(item) {
@@ -137,12 +137,12 @@ $(function() {
     }
 
     // just in case, relayout after image loads
-    $grid.imagesLoaded().progress(function() {
+    $grid.imagesLoaded().progress(function(e) {
       $grid.packery();
       i++;
 
       // end of array
-      if(i === items_len) {
+      if(e.images.length === e.progressedCount) {
         allImagesLoaded();
       }
     });
