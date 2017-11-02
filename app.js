@@ -27,8 +27,8 @@ var storage = multer.diskStorage({
 })
 
 function fileFilter(req, file, cb) {
-  var mimetype = _filetypes.test(file.mimetype)
-  var extname = _filetypes.test(path.extname(file.originalname).toLowerCase())
+  var mimetype = filetypes.test(file.mimetype)
+  var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
 
   if (mimetype && extname) {
     return cb(null, true)
