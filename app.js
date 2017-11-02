@@ -144,13 +144,15 @@ function websocket(ws, req) {
     createWorker({msg: 'update_items'})
   } else {
     // send cached ones
-    ws.send(items)
+    if(Array.isArray(items) && items.length > 0) {
+      ws.send(JSON.stringify(items))
+    }
   }
 
   // the websocket is added to the context as `this.websocket`.
-  ws.on('message', function(message) {
-    console.log(message)
-  })
+  // ws.on('message', function(message) {
+  //   console.log(message)
+  // })
 
   // yielding `next` will pass the context on to the next ws middleware
   next()
@@ -168,7 +170,11 @@ function createWorker(msg) {
     }
 
     items = _items
-    app.ws.broadcast(JSON.stringify(items))
+
+    if(Array.isArray(items) && items.length > 0) {
+      app.ws.broadcast(JSON.stringify(items))
+    }
+
     child.kill()
   })
 
