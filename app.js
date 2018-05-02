@@ -14,7 +14,7 @@ const express     = require('express'),
   expressWs       = require('express-ws')(app)
 
 // Upload Settings
-const mimetypes = /video|image/
+const mimetypes = /video|image|octet-stream/
 const filetypes  = /jpeg|jpg|png|gif|mp4|mov/
 
 var storage = multer.diskStorage({
@@ -29,8 +29,6 @@ var storage = multer.diskStorage({
 function fileFilter(req, file, cb) {
   var mimetype = mimetypes.test(file.mimetype)
   var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
-
-  console.log('fileFilter', file.mimetype, path.extname(file.originalname).toLowerCase())
 
   if (mimetype && extname) {
     return cb(null, true)
