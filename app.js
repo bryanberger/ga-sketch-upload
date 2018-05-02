@@ -30,7 +30,7 @@ function fileFilter(req, file, cb) {
   var mimetype = mimetypes.test(file.mimetype)
   var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
 
-  console.log('fileFilter', mimetype, extname)
+  console.log('fileFilter', file.mimetype, path.extname(file.originalname).toLowerCase())
 
   if (mimetype && extname) {
     return cb(null, true)
